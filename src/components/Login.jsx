@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+// import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
@@ -10,22 +10,21 @@ import { client } from "../client";
 
 const Login = () => {
   const navigate = useNavigate();
+
   const responseGoogle = async (response) => {
     const decoded = jwt_decode(response.credential);
 
     localStorage.setItem("user", JSON.stringify(decoded));
 
     console.log(decoded);
-    const { name, aud, picture } = decoded;
+    const { name, sub, picture } = decoded;
 
     const doc = {
-      _id: aud,
+      _id: sub,
       _type: "user",
       userName: name,
       image: picture,
     };
-
-    // await axios.post(`http://localhost:3000/api/auth`, doc);
 
     client.createIfNotExists(doc).then(() => {
       navigate("/", { replace: true });
