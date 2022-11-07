@@ -13,8 +13,9 @@ const App = () => {
         ? JSON.parse(localStorage.getItem("user"))
         : localStorage.clear();
 
+    console.log(User);
     if (!User) navigate("/login");
-  });
+  }, []);
 
   return (
     // <Routes>

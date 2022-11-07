@@ -15,15 +15,18 @@ const Home = () => {
   const [user, setUser] = useState(null);
   const scrollRef = useRef(null);
 
-  const userInfo = fetchUser();
+  const userInfo =
+    localStorage.getItem("user") !== "undefined"
+      ? JSON.parse(localStorage.getItem("user"))
+      : localStorage.clear();
 
   useEffect(() => {
-    const query = userQuery(userInfo?.googleId);
+    const query = userQuery(userInfo?.sub);
 
     client.fetch(query).then((data) => {
       setUser(data[0]);
     });
-  });
+  }, []);
 
   useEffect(() => {
     scrollRef.current.scrollTo(0, 0);
@@ -63,6 +66,8 @@ const Home = () => {
         )}
       </div>
       <div className="pb-2 flex-1 h-screen overflow-y-scroll" ref={scrollRef}>
+        {/* <UserProfile />
+        <Pins user={user && user} /> */}
         <Routes>
           <Route path="/user-profile/:userId" element={<UserProfile />}></Route>
           <Route path="/" element={<Pins user={user && user} />}></Route>
