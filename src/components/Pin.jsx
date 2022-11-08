@@ -11,10 +11,14 @@ import { fetchUser } from "../utils/fetchUser";
 const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
   const [postHovered, setPostHovered] = useState(false);
   // const [savingPost, setSavingPost] = useState(false);
+  console.log(image);
 
   const navigate = useNavigate();
 
-  const user = fetchUser();
+  const user =
+    localStorage.getItem("user") !== "undefined"
+      ? JSON.parse(localStorage.getItem("user"))
+      : localStorage.clear();
 
   const alreadySaved = !!save?.filter(
     (item) => item.postedBy._id === user.googleId
@@ -30,10 +34,10 @@ const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
         .insert("after", "save[-1]", [
           {
             _key: uuidv4(),
-            userId: user.googleId,
+            userId: user.sub,
             postedBy: {
               _type: "postedBy",
-              _ref: user.googleId,
+              _ref: user.sub,
             },
           },
         ])
@@ -76,7 +80,7 @@ const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
                   href={`${image?.asset?.url}?dl=`}
                   download
                   onClick={(e) => e.stopPropagation()}
-                  className="bg-white w-9 h-9 rounded-full items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none"
+                  className="bg-white w-9 h-9 p-2 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none"
                 >
                   <MdDownloadForOffline />
                 </a>
@@ -116,10 +120,10 @@ const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
                     : destination.slice(8)}
                 </a>
               )}
-              {postedBy?._id === user.googleId && (
+              {postedBy?._id === user.sub && (
                 <button
                   type="button"
-                  className="bg-white-500 p-2 opacity-70 hover:opacity-100  font-bold px-5 py-1 text-dark rounded-3xl hover:shadow-md outlined-none"
+                  className="bg-white p-2 rounded-full w-8 h-8 flex items-center justify-center text-dark opacity-75 hover:opacity-100 outline-none"
                   onClick={(e) => {
                     e.stopPropagation();
                     deletePin(_id);
@@ -132,6 +136,18 @@ const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
           </div>
         )}
       </div>
+
+      <Link
+        to={`user-profile/${postedBy?._id}`}
+        className="flex gap-2 mt-2 items-center"
+      >
+        <img
+          src={postedBy?.image}
+          alt="user-profile"
+          className="w-8 h-8 rounded-full object-cover"
+        />
+        <p className="font-semibold capitalize">{postedBy?.userName}</p>
+      </Link>
     </div>
   );
 };

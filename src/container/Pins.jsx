@@ -18,7 +18,7 @@ const Pins = ({ user }) => {
       </div>
       <div className="h-full">
         <Routes>
-          <Route path="*" element={<Navigate replace to="/" />} />
+          {/* <Route path="*" element={<Navigate replace to="/" />} /> */}
           <Route path="/" element={<Feed />} />
           <Route path="/category/:categoryId" element={<Feed />} />
           <Route

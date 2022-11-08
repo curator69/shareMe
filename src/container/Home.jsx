@@ -70,7 +70,7 @@ const Home = () => {
         <Pins user={user && user} /> */}
         <Routes>
           <Route path="/user-profile/:userId" element={<UserProfile />}></Route>
-          <Route path="/" element={<Pins user={user && user} />}></Route>
+          <Route path="/*" element={<Pins user={user && user} />}></Route>
         </Routes>
       </div>
     </div>
